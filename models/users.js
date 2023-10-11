@@ -1,10 +1,21 @@
-const usersModel ={
-    getAll: `
-    SELECT
-        *
-    FROM
-        User
-    `,
-};
+const { end } = require("../db");
 
-module.exports=usersModel;
+const usermodels = {
+    getUsers: `
+    SELECT 
+    * 
+    FROM 
+    user`,
+
+    getByID: `
+    SELECT
+    *
+    FROM
+    user
+    WHERE
+    id= ?
+    `,
+
+}
+
+module.exports = usermodels;
