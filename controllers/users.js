@@ -1,7 +1,7 @@
 const {request, response} = require('express');
 const usermodels = require('../models/users');
 const pool=require('../db');
-const { use } = require('../routes/users');
+
 
 const listUsers = async (req = request, res = response) => {
     let conn; 
@@ -49,7 +49,8 @@ const listUsersByID = async (req = request, res = response) => {
         res.status(404).json({msg: 'User not foud'});
         return;
     }
-
+    
+    
     res.json(user);
     } catch (error){
         console.log(error);
@@ -58,5 +59,61 @@ const listUsersByID = async (req = request, res = response) => {
         if (conn) conn.end();
     }
 }
-   
-module.exports={listUsers, listUsersByID};
+
+const addUser =async(req = request, res= response)=>{
+    let conn;
+    const {
+        username,
+        email,
+        password,
+        name,
+        lastname,
+        phone_num ='',
+        role_id,
+        id_active =1,
+    } = req.body;
+    if (!username|| !email|| !password|| !name|| !lastname|| !role_id){
+res.status(400).json({msg:'Missing informarion'});
+return;
+        }
+        const user= [username, email, password, name, lastname, phone_num, role_id, id_active ]
+    
+    try {
+        conn = await pool.getConnection();
+        
+        const [usernameUser] = await conn.query(
+            usermodels.getByUsername,
+            [username],
+            (err) => {if (err) throw err;}
+        );
+        if (usernameUser){
+            res.status(409).json({msg:`User with username ${username} already exists`});
+            return;
+        }
+
+        const [emailUser] = await conn.query(
+            usermodels.getByEmail,
+            [email],
+            (err) => {if (err) throw err;}
+        );
+        if (emailUser){
+            res.status(409).json({msg:`User with email ${email} already exists`});
+            return;
+        }
+
+        
+        const userAdded = await conn.query(usermodels.addRow,[...user],(err)=>{
+
+        })
+        
+        if (userAdded.affecteRows === 0) throw new Error ({msg:'Failed to add user'});
+        res.json({msg:'User add succesfully'});
+    }catch(error){
+console.log(error);
+res.status(500).json(error);
+    } finally {
+        if (conn) conn.end();
+    }
+}
+
+module.exports={listUsers, listUsersByID, addUser};

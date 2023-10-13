@@ -1,12 +1,9 @@
-const { end } = require("../db");
-
 const usermodels = {
-    getUsers: `
+    getAll: `
     SELECT 
     * 
     FROM 
     user`,
-
     getByID: `
     SELECT
     *
@@ -15,7 +12,37 @@ const usermodels = {
     WHERE
     id= ?
     `,
+    addRow:`
+    INSERT INTO
+    user(
+        username,
+        email,
+        password,
+        name,
+        lastname,
+        phone_num,
+        role_id,
+        id_active
+    )
+    VALUES (
+        ?,?,?,?,?,?,?,?
+    )`,
+    getByUsername:`
+    SELECT 
+    id 
+    FROM 
+    user 
+    WHERE username =?
+    `,
 
+getByEmail:`
+    SELECT 
+    id 
+    FROM 
+    user 
+    WHERE 
+    email =?
+    `,
 }
 
-module.exports = usermodels;
+module.exports=usermodels;
