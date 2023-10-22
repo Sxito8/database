@@ -43,6 +43,32 @@ getByEmail:`
     WHERE 
     email =?
     `,
+
+    updateUser:`
+    UPDATE
+    user
+    SET
+        username = ?,
+        email = ?,
+        password = ?,
+        name = ?,
+        lastname = ?,
+        phone_num = ?,
+        role_id = ?,
+        id_active = ?
+        WHERE 
+        id =?
+    `,
+
+    deleteRow:`
+    UPDATE 
+    user
+    SET
+    id_active =0
+    WHERE 
+    id=?
+    `,
+    
 }
 
 module.exports=usermodels;
