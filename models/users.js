@@ -69,6 +69,7 @@ getByEmail:`
     id=?
     `,
     
+    
 }
 
 module.exports=usermodels;
